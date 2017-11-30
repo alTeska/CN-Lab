@@ -5,5 +5,13 @@ Coffee example:
 
 HH Model:
   ☐ steady state values diagram
+  ☐ implus graph
   ☐ gating variables and confuctance graphs
+  ☐ frequency experiment
   ☐ jupyter file
+
+
+Ad HH exercise
+  3) how to simplyfy?
+    -> get read of m, cause small
+    -> m=1-h or the other way around, we are throwing them togheter, one differential equation
