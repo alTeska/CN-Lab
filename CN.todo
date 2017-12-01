@@ -5,7 +5,7 @@ Coffee example:
 
 HH Model:
   ☐ frequency experiment
-  ☐ simplification experiment(reduce m with m = 1-h) - removes one differential equation
+  ☐ simplification experimenttreduce m with m = 1-h) - removes one differential equation
 
   ☐ steady state values diagram
   ☐ gating variables and conductance graphs
@@ -14,4 +14,17 @@ HH Model:
     ☐ stimulations
     ☐ plot of current
     ☐ plot of voltage
+
+Hodgkin-Huxley:
   ☐ jupyter file + descriptions
+    ☐ finish 5 graps:
+      ☐ steady states
+      ☐ gating variables
+      ☐ voltage
+      ☐ currents
+      ☐ conducances
+    ☐ migrate to first jupyter
+    ☐ create HH2 to start with impulses
+    ☐ migate to jupyter
+    ☐ create an file with all simulation as funcitons/objects
+    ☐ add descriptions
