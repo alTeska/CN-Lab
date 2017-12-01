@@ -25,21 +25,25 @@ def INa(u, m, h): return g_Na * m**3 * h * (u - E_Na)  #sodium channel
 def IK (u, n   ): return g_K  * n**4     * (u - E_K)   #potas
 def IL (u      ): return g_L             * (u - E_L)
 
-# step up 10 uA/cm^2 every 100ms for 400ms
+#current step up 10 uA/cm^2 every 100ms for 400ms
 def I_inj(t):
     return 10*(t>100) - 10*(t>200) + 35*(t>300)
     #return 10*t
 
 # F: < m,n,h>
-dmdu = lambda m,u: alpha_m(u) * (1 - m) - beta_m(u) * m
-dndu = lambda n,u: alpha_n(u) * (1 - n) - beta_n(u) * n
-dhdu = lambda h,u: alpha_h(u) * (1 - h) - beta_h(u) * h
-dudu = lambda u, m, n, h, I=0: I - INa(u, m, h)- IK(u, n)- IL(u)/ C_m
+def dm_du(m, u): return alpha_m(u) * (1 - m) - beta_m(u) * m
+def dn_du(n, u): return alpha_n(u) * (1 - n) - beta_n(u) * n
+def dh_du(h, u): return alpha_h(u) * (1 - h) - beta_h(u) * h
+def du_du(u, m, n, h, I=0): return I - INa(u, m, h)- IK(u, n)- IL(u)/ C_m
 
-#compute steady state values - system specification (starting points calc)
+#compute steady state values - system specification (starting points)
 MSS = lambda u: alpha_m(u) / (alpha_m(u) + beta_m(u))
 NSS = lambda u: alpha_n(u) / (alpha_n(u) + beta_n(u))
 HSS = lambda u: alpha_h(u) / (alpha_h(u) + beta_h(u))
+
+#conducances model
+def cond_Na(m, h): g_Na * m**3 * h
+def cond_K (n   ): g_K  * n**4
 
 #starting points - values of gating variables (MSS etc. when u = 0)
 dt = 1e-3
@@ -50,9 +54,9 @@ M = np.zeros_like(time_vec)
 N = np.zeros_like(time_vec)
 H = np.zeros_like(time_vec)
 U = np.ones_like(time_vec) * u0
-U[time_vec >= 10] = 10
-
 dU = np.zeros_like(time_vec)
+
+U[time_vec >= 10] = 10
 
 M[0] = MSS(U[0])
 N[0] = NSS(U[0])
@@ -61,10 +65,21 @@ dU[0] = U[0]
 
 #evolution of state values over time
 for t in range(0, len(time_vec)-1):
-    M[t+1] = M[t] + dmdu(M[t], U[t]) * dt
-    N[t+1] = N[t] + dndu(N[t], U[t]) * dt
-    H[t+1] = H[t] + dhdu(H[t], U[t]) * dt
-    dU[t+1] = U[t] + dudu(U[t], M[t+1], N[t+1], H[t+1]) * dt
+    M[t+1]  = M[t] + dm_du(M[t], U[t]) * dt
+    N[t+1]  = N[t] + dn_du(N[t], U[t]) * dt
+    H[t+1]  = H[t] + dh_du(H[t], U[t]) * dt
+    dU[t+1] = U[t] + du_du(U[t], M[t+1], N[t+1], H[t+1]) * dt
+
+#evolution of conducances TODO: based on vectors
+cNa = np.zeros_like(time_vec)
+cK  = np.zeros_like(time_vec)
+
+for t in range(0, len(time_vec)-1):
+    cNa[t] = cond_Na(M[t], H[t])
+    cK [t] = cond_K (N[t])
+
+#currents monitor TODO
+
 
 ##Plots
 #probability of steady states plot
@@ -101,3 +116,16 @@ ax3.set_ylabel('dU[mV]')
 ax3.set_title('Gating voltage');
 
 plt.show()
+
+#Conductance plot - fix
+fig4, ax4 = plt.subplots()
+#ax4.plot(time_vec, cNa, label="cNa")
+#ax4.plot(time_vec, cK , label="cK ")
+
+#ax4.plot(time_vec, cond_Na(M, H), label="cNa")
+#ax4.plot(time_vec, cond_K(N) , label="cK ")
+
+ax4.grid(True)
+ax4.set_xlabel('m, n, h')
+ax4.set_ylabel('cond')
+ax4.set_title('Conductance');
