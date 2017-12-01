@@ -1,17 +1,17 @@
 Computational Neuroscience
 
 Coffee example:
-  ☐ add slope to the diagram
+  ✔ add slope to the diagram @done(2017-12-01 18:55) @project(Coffee example)
 
 HH Model:
-  ☐ steady state values diagram
-  ☐ implus graph
-  ☐ gating variables and confuctance graphs
   ☐ frequency experiment
-  ☐ jupyter file
+  ☐ simplification experiment(reduce m with m = 1-h) - removes one differential equation
 
-
-Ad HH exercise
-  3) how to simplyfy?
-    -> get read of m, cause small
-    -> m=1-h or the other way around, we are throwing them togheter, one differential equation
+  ☐ steady state values diagram
+  ☐ gating variables and conductance graphs
+  ☐ implus graph:
+    ☐ one plot with 4 subsections
+    ☐ stimulations
+    ☐ plot of current
+    ☐ plot of voltage
+  ☐ jupyter file + descriptions
