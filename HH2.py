@@ -36,48 +36,49 @@ def MSS(u): return alpha_m(u) / (alpha_m(u) + beta_m(u))
 def NSS(u): return alpha_n(u) / (alpha_n(u) + beta_n(u))
 def HSS(u): return alpha_h(u) / (alpha_h(u) + beta_h(u))
 
-def iinj_rising(t_cur, Imax,  dt):
-    istep = np.arange(0, t_cur, dt)
-    istep = istep / (t_cur/Imax)
-    return istep
-
-def iinj_f(vec):
-    I = lambda t: 15 + np.sin(2 * np.pi * 1e-3 * t)
-    vfunc = np.vectorize(I)
-    return vfunc(vec)
 
 #HHmodel with
-def HHModel(I, m0, n0, h0, u0, t):
-    dt = 1e-3
-    time = np.arange(0, t, dt)
+def HHModel(I, m0, n0, h0, u0, time):
     M = np.zeros_like(time)
     N = np.zeros_like(time)
     H = np.zeros_like(time)
     U = np.zeros_like(time)
     M[0], N[0], H[0], U[0] = m0, n0, h0, u0
 
-    #if type(I) is np.ndarray:
-    #    iinj = np.ones_like(time) * max(I)
-    #    iinj[0 : I.shape[0]] = I
-    #else:
-    #    iinj = np.ones_like(time) * I
-
-    iinj = iinj_f(time)
+    if not type(I) is np.ndarray:
+        I = np.ones_like(time) * I
 
     #evolution of state values over time
     for t in range(0, len(time)-1):
         M[t+1] = M[t] + dm_du(M[t], U[t]) * dt
         N[t+1] = N[t] + dn_du(N[t], U[t]) * dt
         H[t+1] = H[t] + dh_du(H[t], U[t]) * dt
-        U[t+1] = U[t] + du_du(U[t], M[t+1], N[t+1], H[t+1], iinj[t]) * dt
+        U[t+1] = U[t] + du_du(U[t], M[t+1], N[t+1], H[t+1], I[t]) * dt
 
-    return U, time, M, N, H, iinj
+    return U, M, N, H, I
+
+def iinj_rising(vec, t_rising, dt, Imax):
+    istep = np.arange(0, t_rising, dt)
+    istep = istep / (t_rising / Imax)
+
+    iinj = np.ones_like(vec) * Imax
+    iinj[0 : istep.shape[0]] = istep
+    return iinj
+
+def iinj_f(vec):
+    I = lambda t: 15 + np.sin(2 * np.pi * 1e-3 * t)
+    vfunc = np.vectorize(I)
+    return vfunc(vec)
 
 #starting points - values of gating variables (MSS etc. when u = 0)
-t = 500
 u0 = -70
-I0 = iinj_rising(250, 10, 1e-3)
-U, t, M, N, H, iinj = HHModel(I0, MSS(u0), NSS(u0), HSS(u0), u0, t)
+tl = 500
+dt = 1e-3
+t = np.arange(0, tl, dt)
+
+I1 = iinj_f(t)
+I0 = iinj_rising(t, 200, 1e-3, 10)
+U, M, N, H, iinj = HHModel(I0, MSS(u0), NSS(u0), HSS(u0), u0, t)
 
 ##PLOT
 fig, axes = plt.subplots(3, 1, figsize=(12, 4))
