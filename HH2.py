@@ -82,11 +82,11 @@ I1 = iinj_f(t)
 I0 = iinj_rising(t, 200, 1e-3, 10)
 U, M, N, H, iinj = HHModel(I0, MSS(u0), NSS(u0), HSS(u0), u0, t)
 
-#peakind = signal.find_peaks_cwt(U, np.arange(1,10))
+#findpeak 
+maxtab, mintab = peakdet(U, 1e-3)
+i = array(maxtab)[:,0].astype(int)
 
-print('plotting')
 ##PLOT
-'''
 fig, axes = plt.subplots(3, 1, figsize=(12, 4))
 axes[0].plot(t, iinj, label="Iinj")
 axes[0].grid(True)
@@ -94,7 +94,7 @@ axes[0].set_ylabel('I[uA]')
 axes[0].set_title("Injected current")
 
 axes[1].plot(t, U, label="U")
-#axes[1].plot(t[peakind], U[peakind], '*')
+axes[1].plot(t[i], U[i], '*')
 axes[1].grid(True)
 axes[1].set_xlabel('t[ms]')
 axes[1].set_ylabel('U[mV]')
@@ -106,25 +106,6 @@ axes[2].plot(t, H, label="H")
 axes[2].grid(True)
 axes[2].set_ylabel('Steady state val')
 axes[2].set_title("Steady state values")
-
-
-#peakind = signal.find_peaks_cwt(I1, np.arange(1,10))
-
 '''
-
-maxtab, mintab = peakdet(I1, 1e-3)
-i = int(array(maxtab)[:,0])
-
-fig2, axes2 = plt.subplots(2, 1, figsize=(12, 4))
-axes2[0].plot(t, I1)
-axes2[0].plot(t[i], I1[i], '*')
-
-'''
-from matplotlib.pyplot import plot, scatter, show
-series = [0,0,0,2,0,0,0,-2,0,0,0,2,0,0,0,-2,0]
-maxtab, mintab = peakdet(series,.3)
-plot(series)
-scatter(array(maxtab)[:,0], array(maxtab)[:,1], color='blue')
-scatter(array(mintab)[:,0], array(mintab)[:,1], color='red')
 '''
 plt.show()
