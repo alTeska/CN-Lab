@@ -3,28 +3,32 @@ Computational Neuroscience
 Coffee example:
   ✔ add slope to the diagram @done(2017-12-01 18:55) @project(Coffee example)
 
-HH Model:
+HH Model Old:
   ☐ frequency experiment
   ☐ simplification experimenttreduce m with m = 1-h) - removes one differential equation
-
-  ☐ steady state values diagram
-  ☐ gating variables and conductance graphs
+  ✔ steady state values diagram @done(2017-12-11 21:31) @project(HH Model)
+  ✔ gating variables and conductance graphs @done(2017-12-11 21:31) @project(HH Model)
+  ✔ migate to jupyter @done(2017-12-11 21:31) @project(HH Model Old / ☐ implus graph)
   ☐ implus graph:
-    ☐ one plot with 4 subsections
-    ☐ stimulations
-    ☐ plot of current
-    ☐ plot of voltage
+    ✔ one plot with 4 subsections @done(2017-12-11 21:30) @project(HH Model / ☐ implus graph)
+    ✔ stimulations @done(2017-12-11 21:30) @project(HH Model / ☐ implus graph)
+    ✔ plot of current @done(2017-12-11 21:30) @project(HH Model / ☐ implus graph)
+    ✔ plot of voltage @done(2017-12-11 21:30) @project(HH Model / ☐ implus graph)
 
-Hodgkin-Huxley:
+Hodgkin-Huxley with impuls:
+  ✔ create HH2 to start with impulses @done(2017-12-11 21:31) @project(Hodgkin-Huxley)
   ☐ jupyter file + descriptions
-    ☐ finish 5 graps:
-      ☐ steady states
-      ☐ gating variables
-      ☐ voltage
-      ☐ currents
-      ☐ conducances
-    ☐ migrate to first jupyter
-    ☐ create HH2 to start with impulses
-    ☐ migate to jupyter
-    ☐ create an file with all simulation as funcitons/objects
-    ☐ add descriptions
+  ☐ create an file with all simulation as funcitons/objects
+  ☐ finish 5 graps:
+    ✔ steady states @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
+    ✔ gating variables @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
+    ✔ voltage @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
+    ✔ currents @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
+    ✔ conducances @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
+  ☐ find spike finding functions
+  ☐ analyze the whole scheme of neuron polatization
+  ☐ second model with noises
+  ☐ finish jupyter #2:
+    ☐ equations
+    ☐ plots for different currents
+    ☐ stimulus for rebaund spike

@@ -133,4 +133,3 @@ plt.ylabel('U (mV)')
 
 plt.show()
 '''
-plt.show()
