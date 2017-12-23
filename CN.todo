@@ -25,7 +25,7 @@ Hodgkin-Huxley with impuls:
     ✔ voltage @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
     ✔ currents @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
     ✔ conducances @done(2017-12-11 21:33) @project(Hodgkin-Huxley with impuls / ☐ finish 5 graps)
-  ☐ find spike finding functions
+  ✔ find spike finding functions @done(2017-12-18 12:10) @project(Hodgkin-Huxley with impuls)
   ☐ analyze the whole scheme of neuron polatization
   ☐ second model with noises
   ☐ finish jupyter #2:

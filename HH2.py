@@ -21,10 +21,12 @@ def beta_m(u):  return 4 * np.exp((-u - 65) / 18)
 def beta_n(u):  return 0.125 * np.exp((-u - 65) / 80)
 def beta_h(u):  return 1 / (np.exp(3 - 0.1 * (u + 65)) + 1)
 
+
 #Membrane currents
 def I_Na(u, m, h): return g_Na * m**3 * h * (u - E_Na)  #sodium channel
 def I_K (u, n   ): return g_K  * n**4     * (u - E_K)   #potas
 def I_L (u      ): return g_L             * (u - E_L)
+
 
 # F: < m,n,h>
 def dm_du(m, u): return alpha_m(u) * (1 - m) - beta_m(u) * m
@@ -32,10 +34,59 @@ def dn_du(n, u): return alpha_n(u) * (1 - n) - beta_n(u) * n
 def dh_du(h, u): return alpha_h(u) * (1 - h) - beta_h(u) * h
 def du_du(u, m, n, h, I=0): return (I_Na(u, m, h) + I_K(u, n) + I_L(u) - I)/ -C_m
 
+
 #compute steady state values - system specification (starting points)
 def MSS(u): return alpha_m(u) / (alpha_m(u) + beta_m(u))
 def NSS(u): return alpha_n(u) / (alpha_n(u) + beta_n(u))
 def HSS(u): return alpha_h(u) / (alpha_h(u) + beta_h(u))
+
+
+#Current generators
+def iinj_rising(vec, t_rising, dt, Imax):
+    istep = np.arange(0, t_rising, dt)
+    istep = istep / (t_rising / Imax)
+
+    iinj = np.ones_like(vec) * Imax
+    iinj[0 : istep.shape[0]] = istep
+    return iinj
+
+def iinj_f(vec):
+    I = lambda t: 15 + np.sin(2 * np.pi * 1e-3 * t)
+    vfunc = np.vectorize(I)
+    return vfunc(vec)
+
+
+#helper functions
+def plot_all(t, U, M, N, H, iinj, peaks=True):
+    #findpeak
+    if peaks:
+        maxtab, mintab = peakdet(U, 1e-3)
+        i = array(maxtab)[:,0].astype(int)
+
+    #plot
+    fig, axes = plt.subplots(3, 1, figsize=(12, 4))
+    #plot injected current
+    axes[0].plot(t, iinj, label="Iinj")
+    axes[0].grid(True)
+    axes[0].set_ylabel('I[uA]')
+    axes[0].set_title("Injected current")
+
+    #plot membtane potential
+    axes[1].plot(t, U, label="U")
+    if peaks: axes[1].plot(t[i], U[i], '*')
+    axes[1].grid(True)
+    axes[1].set_ylabel('U[mV]')
+    axes[1].set_title("Membrane potential")
+
+    #plot steady state values
+    axes[2].plot(t, M, label="M")
+    axes[2].plot(t, N, label="N")
+    axes[2].plot(t, H, label="H")
+    axes[2].set_xlabel('t[ms]')
+    axes[2].grid(True)
+    axes[2].set_ylabel('Steady state val')
+    axes[2].set_title("Steady state values")
+    return fig, axes
 
 
 #HHmodel with
@@ -58,19 +109,6 @@ def HHModel(I, m0, n0, h0, u0, time):
 
     return U, M, N, H, I
 
-#Current generators
-def iinj_rising(vec, t_rising, dt, Imax):
-    istep = np.arange(0, t_rising, dt)
-    istep = istep / (t_rising / Imax)
-
-    iinj = np.ones_like(vec) * Imax
-    iinj[0 : istep.shape[0]] = istep
-    return iinj
-
-def iinj_f(vec):
-    I = lambda t: 15 + np.sin(2 * np.pi * 1e-3 * t)
-    vfunc = np.vectorize(I)
-    return vfunc(vec)
 
 #starting points - values of gating variables (MSS etc. when u = 0)
 u0 = -70
@@ -78,34 +116,43 @@ tl = 500
 dt = 1e-3
 t = np.arange(0, tl, dt)
 
-I1 = iinj_f(t)
+Isin = iinj_f(t)
+U, M, N, H, iinj = HHModel(Isin, MSS(u0), NSS(u0), HSS(u0), u0, t)
+plot_all(t, U, M, N, H, iinj)
+
 I0 = iinj_rising(t, 200, 1e-3, 10)
 U, M, N, H, iinj = HHModel(I0, MSS(u0), NSS(u0), HSS(u0), u0, t)
+plot_all(t, U, M, N, H, iinj)
 
-#findpeak 
-maxtab, mintab = peakdet(U, 1e-3)
-i = array(maxtab)[:,0].astype(int)
+def firing_rate(U, start, stop):
+    #should be per second
+    #get subset t = {start, stop}
+    #if t:
+    #    U = U[t[0]:t[1]]
 
-##PLOT
-fig, axes = plt.subplots(3, 1, figsize=(12, 4))
-axes[0].plot(t, iinj, label="Iinj")
-axes[0].grid(True)
-axes[0].set_ylabel('I[uA]')
-axes[0].set_title("Injected current")
+    #maxtab, mintab = peakdet(U, 1e-3)
+    #i = array(maxtab)[:,0].astype(int)
+    #print(len(i))
+    return None
 
-axes[1].plot(t, U, label="U")
-axes[1].plot(t[i], U[i], '*')
-axes[1].grid(True)
-axes[1].set_xlabel('t[ms]')
-axes[1].set_ylabel('U[mV]')
-axes[1].set_title("Membrane potential")
+t1 = 0
+t2 = 50
+dt = 0.001
+tt = np.arange(t1, t2, dt)
+currents = np.linspace(0, 20, 100)
+firingRate = np.zeros_like(currents)
 
-axes[2].plot(t, M, label="M")
-axes[2].plot(t, N, label="N")
-axes[2].plot(t, H, label="H")
-axes[2].grid(True)
-axes[2].set_ylabel('Steady state val')
-axes[2].set_title("Steady state values")
-'''
-'''
+for i in range(len(currents)):
+    I = currents[i] * np.ones_like(tt)
+    u, m, n, h, iinj = HHModel(I, MSS(u0), NSS(u0), HSS(u0), u0, tt)
+    peaks = peakdet(u, 1e-3)
+    firingRate[i] = (float(len(peaks))/t2) * 1000 #number of spikes per SECOND
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 1, 1])
+axes.plot(currents, firingRate, label='Activation Function')
+axes.set_xlabel('Input Current')
+axes.set_ylabel('Firing Rate')
+axes.legend()
+
 plt.show()
