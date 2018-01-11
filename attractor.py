@@ -56,7 +56,7 @@ axes.plot(time_vec, Y2, label="y2")
 axes.legend(loc=2)
 axes.set_ylabel('activity')
 axes.set_xlabel("time")
-axes.set_title("Attractor Network")
+axes.set_title("Attractor Network w=0.2, v=0.8")
 
 ##EX 1b
 w = 0.7
@@ -72,7 +72,7 @@ axes.plot(time_vec, Y2, label="y2")
 axes.legend(loc=2)
 axes.set_ylabel('activity')
 axes.set_xlabel("time")
-axes.set_title("Attractor Network")
+axes.set_title("Attractor Network w=0.2, v=0.7")
 
 #EX 2
 E = np.zeros_like(time_vec)
@@ -85,7 +85,7 @@ axes.grid(True)
 axes.plot(time_vec, E)
 axes.set_ylabel('input')
 axes.set_xlabel("time")
-axes.set_title("Attractor Network")
+axes.set_title("External input")
 
 fig, axes = plt.subplots()
 axes.grid(True)
@@ -94,7 +94,7 @@ axes.plot(time_vec, Y2, label="y2")
 axes.legend(loc=2)
 axes.set_ylabel('activity')
 axes.set_xlabel("time")
-axes.set_title("Attractor Network")
+axes.set_title("Attractor Network with external input, w=0.2, v=0.8")
 
 #EX3
 Y1, Y2, I = ActivationNetwork(time_vec, w, v, E, activation_sigm)
@@ -107,6 +107,6 @@ axes.plot(time_vec, Y2, label="y2")
 axes.legend(loc=2)
 axes.set_ylabel('activity')
 axes.set_xlabel("time")
-axes.set_title("Attractor Network")
+axes.set_title("Attractor Network with smooth sigmoid")
 
 plt.show()
