@@ -38,7 +38,6 @@ def MSS(u): return alpha_m(u) / (alpha_m(u) + beta_m(u))
 def NSS(u): return alpha_n(u) / (alpha_n(u) + beta_n(u))
 def HSS(u): return alpha_h(u) / (alpha_h(u) + beta_h(u))
 
-
 #Current generators
 def iinj_rising(vec, t_rising, dt, Imax):
     istep = np.arange(0, t_rising, dt)
